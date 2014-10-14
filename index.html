@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<!--<link type="text/css" rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
+        <link rel="stylesheet" href="bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+	</head>
+	<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="header">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html" target="_self">Kinnek</a>
+        </div>
+    </nav>
+
+		<!-- MAIN DOM -->
+		<div id="main" class=" container container-bg pb-20" style="margin-top: 70px;">
+
+			<div id="requests-list-view"></div>
+			<div id="request-view"></div>
+			<div id="supplier-view"></div>
+		</div>
+
+
+
+
+
+		<!-- TEMPLATES -->
+		<script type="text/template" id="requests-list-template">
+			<h3>My Requests </h3>
+			<div class="row hidden-sm hidden-xs">
+				<div class="col-md-5"><h5>Request</h5></div>
+				<div class="col-md-3"><h5>Request Date </h5></div>
+				<div class="col-md-1"><h5>Suppliers </h5></div>
+                <div class="col-md-3"><h5>New Activity</h5></div>
+			</div>
+			<hr>
+			<% _.each(requests, function(request){ %> 
+				<div class="row"> 
+					<div class="col-md-5"><a href="#request/<%= request.id %>"> <%= request.headline %></a></div>
+					<div class="col-md-3"><%= moment(request.date).format("MMM Do YYYY") %>
+
+
+
+                    </div>
+					<div class="col-md-1">
+                        <span class="visible-sm visible-xs"># Suppliers: <%= request.suppliers.length %></span>
+                        <div class="hidden-sm hidden-xs"><%= request.suppliers.length %></div>
+                        </div>
+                    <div class="col-md-3">
+                        <% if (request.suppliers && request.suppliers.length > 0) { %>
+                             <% _.each(request.suppliers,function(supplier){ %>
+                                <% if(supplier.quote) { %>
+                                    <% if(typeof supplier.quote.unviewed !== 'undefined' && supplier.quote.unviewed ) { %>
+                                            <a href="#request/<%= request.id %>/supplier/<%= supplier.id %>" class="newMsg">
+                                                    Quote From <%= supplier.name %>
+                                                <% if(supplier.quote.lineItems && supplier.quote.lineItems.length) { %>
+                                                <span class="quote">($<%=supplier.quote.lineItems[supplier.quote.lineItems.length - 1].price %>/<%=supplier.quote.lineItems[supplier.quote.lineItems.length - 1].unit %>)</span>
+                                                 <% }%>
+                                                </a>
+                                    <% } %>
+                                <% } %>
+
+                                <% if(supplier.messages.length) { %>
+                                    <% _.each(supplier.messages,function(message){ %>
+                                        <% if (typeof message.unviewed !== 'undefined' && message.unviewed ) { %>
+                                            <a href="#request/<%= request.id %>/supplier/<%= supplier.id %>" class="newMsg">
+                                                <span class="glyphicon glyphicon-envelope"></span> From <%= supplier.name %>
+                                            </a>
+                                        <% } %>
+                                    <% }) %>
+                                <% } %>
+                            <% }) %>
+
+                        <% } %>
+                    </div>
+				</div>
+				<hr>
+			<% }) %>
+		</script>
+
+		<script type="text/template" id="request-template">
+            <ol class="breadcrumb">
+              <li><a href="#">My Requests</a></li>
+              <li class="active"><%= headline %></li>
+            </ol>
+
+
+			<!-- request details -->
+			<h4> Request Details </h4>
+			<div class="row"> 
+					<div class="col-md-3">Product Type:</div>
+					<div class="col-md-9"><%= category %></div>
+			</div>
+			<% _.each(desiredSpecs, function(spec){ %> 
+				<div class="row"> 
+					<div class="col-md-3"><%= spec.name %>:</div>
+					<div class="col-md-9"><%= spec.value %></div>
+				</div>
+			<% }) %>
+			
+			<!-- supplier list -->
+			<% if (suppliers && suppliers.length > 0) { %>
+				<hr>
+				<h4> Suppliers </h4>
+				<div class="row hidden-sm hidden-xs">
+					<div class="col-md-4"><h5>Supplier</h5></div>
+					<div class="col-md-4"><h5>Location </h5></div>
+					<div class="col-md-2"><h5>Quote </h5></div>
+					<div class="col-md-2"><h5>Messages </h5></div>
+				</div>
+				<hr>
+				<% _.each(suppliers,function(supplier){ %>
+					<div class="row"> 
+						<div class="col-md-4"><a href="#request/<%= id %>/supplier/<%= supplier.id %>"><%= supplier.name %></a></div>
+						<div class="col-md-4"><%= supplier.city %>, <%= supplier.state %></div>
+						<div class="col-md-2">
+							<% if (supplier.quote && supplier.quote.lineItems.length > 0 ) { %>
+								<% _.each(supplier.quote.lineItems, function(lineItem){ %>
+									$<%= lineItem.price %>
+									<% if (lineItem.aggregateOrPerUnit == "per unit") { %>
+										per <%= lineItem.unit %><br>
+									<% } %>
+								<% }) %>
+							<% } else { %>
+								-
+							<% } %>
+						</div>
+						<div class="col-md-2">
+                            <div class="hidden-sm hidden-xs">
+                                <%= supplier.messages.length %>
+                            </div>
+                            <div class="visible-sm visible-xs">
+                                #messages: <%= supplier.messages.length %>
+                            </div>
+
+                        </div>
+					</div>
+					<hr>
+				<% }) %>
+			<% } %>
+		</script>
+
+		<script type="text/template" id="supplier-template">
+
+            <ol class="breadcrumb">
+              <li><a href="#">My Requests</a></li>
+                <li><a href="#request/<%= request.id %>"><%= request.headline %></a></li>
+              <li class="active"><%= name %></li>
+            </ol>
+
+			<h3> <%= name %>  </h3>
+			<hr>
+			<h4>Supplier Information</h4>
+			<div class="row">
+				<div class="col-md-3">Location:</div><div class="col-md-9"><%= city %>, <%= state %></div>
+			</div>
+			<% if (avgRating !== null) { %>
+			<div class="row">
+				<div class="col-md-3">Customer Rating:</div><div class="col-md-9"><%= avgRating %>/5</div>
+			</div>
+			<% } %>
+			<% if (numReviews !== null && numReviews > 0) { %>
+			<div class="row">
+				<div class="col-md-3">Customer Reviews:</div><div class="col-md-9"><%= numReviews %></div>
+			</div>
+			<% } %>
+			<div class="row">
+				<div class="col-md-3">Responsiveness:</div><div class="col-md-9"><%= responsiveness %></div>
+			</div>
+			<% if (quote !== null) { %>
+				<hr>
+				<h4>Quote
+					<% if (typeof quote.unviewed !== 'undefined' && quote.unviewed) { %><span class="label label-danger">NEW</span><% } %>
+				</h4>
+				<div class="row h5 text-muted hidden-xs hidden-sm">
+					<div class="col-md-2">Qty</div><div class="col-md-8">Description</div><div class="col-md-2">Price</div>
+				</div>
+				<% if (quote.lineItems) { %>
+				<% _.each(quote.lineItems, function(lineitem){ %>
+					<hr>
+					<div class="row lineitem">
+						<div class="col-md-2">
+                            <div class="hidden-xs hidden-sm">
+                                <%= lineitem.quantity %>
+                            </div>
+                            <div class="visible-xs visible-sm">
+                                Qty: <%= lineitem.quantity %>
+                            </div>
+                        </div>
+						<div class="col-md-8">
+							<strong><%= lineitem.name %></strong><br>
+							<pre><%= lineitem.description %></pre>
+							<% _.each(lineitem.attachments, function(attachment){ %>
+								<a href="<%= attachment.url %>" class="label label-info"> <%= attachment.name %></a><br>
+							<% }) %>
+						</div>
+						<div class="col-md-2">$<%= lineitem.price %>
+							<% if (lineitem.aggregateOrPerUnit == "per unit") { %>
+								per <%=  lineitem.unit %><br>
+							<% } else { %>
+								total
+							<% } %>
+						</div>
+					</div>
+
+				<% }) %>
+				<hr>
+				<div id="quote-feedback-view">
+					<h3>How did this quote match what you were looking for?</h3>
+                    <div class="pb-15">Your feedback will help us optimize our system to serve you better!</div>
+					<% if (feedback) { %>
+						<div class="alert alert-success">
+							Thank you for your feedback.
+						</div>
+					<% } else { %>
+						<a class="btn btn-primary mtb-5" href="#request/<%= request.id %>/supplier/<%= id %>/feedback/like"><span class="glyphicon glyphicon-thumbs-up"></span> I like this quote </a>
+						<a class="btn btn-warning mtb-5" href="#request/<%= request.id %>/supplier/<%= id %>/feedback/expn"><span class="glyphicon glyphicon-thumbs-down"></span> This quote is too expensive </a>
+						<a class="btn btn-danger mtb-5" href="#request/<%= request.id %>/supplier/<%= id %>/feedback/irr"><span class="glyphicon glyphicon-thumbs-down"></span> This quote does not match my request </a>
+					<% } %>
+				</div>
+			<% } %>
+			</div>
+
+			<% } %>
+			<% if (messages !== null && messages.length > 0) { %>
+			<hr>
+			<h4>Messages </h4>
+			<div id="messages-view"></div>
+			<% } %>
+		</script>
+
+		<script type="text/template" id="message-template">
+			<div class="panel <% if (typeof unviewed !== 'undefined' && unviewed) { %>panel-success<% } else { %>panel-info<% } %> panel-message">
+			  	<div class="panel-heading">
+					<% if (buyer.id == senderId) { %>
+			  			You
+			  		<% } else { %>
+			  			<span><%= supplier.name %></span>
+			  		<% } %>
+			  		<span class="pull-right">Sent: <%= moment(sentAt).format("YYYY-MM-DD HH:mm") %></span>
+			  	</div>
+				<div class="panel-body">
+					<pre><%= body %></pre>
+				</div>
+			</div>
+		</script>
+
+
+		<!-- JS -->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+		<script type="text/javascript" src="moment.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+	</body>
+</html>
