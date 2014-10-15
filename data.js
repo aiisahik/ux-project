@@ -127,6 +127,7 @@ data = {
           "name": "Geewizz",
           "responsiveness": 1.0,
           "quote": {
+            "unviewed": false,
             "date": "2014-05-27T12:33:32",
             "lineItems": [
               {
@@ -206,6 +207,7 @@ data = {
           "name": "Backwater Capital Leasing",
           "responsiveness": 1.0,
           "quote": {
+            "unviewed": false,
             "date": "2014-05-27T13:50:47",
             "lineItems": [
               {
@@ -412,6 +414,7 @@ data = {
           "name": "The Vineyard Village",
           "responsiveness": 0.112582781456954,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-24T13:25:25",
             "lineItems": [
               {
@@ -467,6 +470,7 @@ data = {
           "name": "Zip Zap Zoom",
           "responsiveness": 1.0,
           "quote": {
+            "unviewed": false, 
             "date": "2014-02-11T00:49:19",
             "lineItems": [
               {
@@ -581,6 +585,7 @@ data = {
           "name": "Brew Bottom Marketing & Branding",
           "responsiveness": 0.666666666666667,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-21T13:48:14",
             "lineItems": [
               {
@@ -608,6 +613,7 @@ data = {
           "name": "Sam & Co.",
           "responsiveness": 0.0,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-13T01:07:04",
             "lineItems": [
               {
@@ -758,6 +764,7 @@ data = {
           "name": "PubStuffs.com",
           "responsiveness": 0.952755905511811,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-06T11:17:17",
             "lineItems": [
               {
@@ -804,6 +811,7 @@ data = {
           "name": "Pacific Custom Wares",
           "responsiveness": 0.52191235059761,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-06T10:44:22",
             "lineItems": [
               {
@@ -846,6 +854,7 @@ data = {
           "name": "Sonoma Screen Printing",
           "responsiveness": 0.95,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-07T10:06:32",
             "lineItems": [
               {
@@ -879,6 +888,7 @@ data = {
           "name": "Xenon Stars and Stripes",
           "responsiveness": 0.97037037037037,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-06T09:04:15",
             "lineItems": [
               {
@@ -941,6 +951,7 @@ data = {
           "name": "Geewizz",
           "responsiveness": 1.0,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-05T17:09:52",
             "lineItems": [
               {
@@ -985,6 +996,7 @@ data = {
           "name": "Tim Tam Toot",
           "responsiveness": 1.0,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-05T18:49:25",
             "lineItems": [
               {
@@ -1018,6 +1030,7 @@ data = {
           "name": "Lawless Kegs",
           "responsiveness": 0.122641509433962,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-12T22:15:08",
             "lineItems": [
               {
@@ -1084,6 +1097,7 @@ data = {
           "name": "The Following Foreigner",
           "responsiveness": 0.0,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-05T16:34:28",
             "lineItems": [
               {
@@ -1184,6 +1198,7 @@ data = {
           "name": "The Competent Grape Stomper",
           "responsiveness": 0.56,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-05T16:59:40",
             "lineItems": [
               {
@@ -1263,6 +1278,7 @@ data = {
           "name": "Kimchi Container Company",
           "responsiveness": 0.492307692307692,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-10T14:25:12",
             "lineItems": [
               {
@@ -1348,6 +1364,7 @@ data = {
           "name": "TakeOurGlass.com",
           "responsiveness": 0.978260869565217,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-05T16:59:54",
             "lineItems": [
               {
@@ -1502,6 +1519,7 @@ data = {
           "name": "Ohio Glass and Goods",
           "responsiveness": 0.964912280701754,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-08T16:06:14",
             "lineItems": [
               {
@@ -1591,6 +1609,7 @@ data = {
           "name": "Sonoma Screen Printing",
           "responsiveness": 0.95,
           "quote": {
+            "unviewed": false,
             "date": "2014-02-11T14:44:06",
             "lineItems": [
               {

@@ -50,28 +50,16 @@
                         </div>
                     <div class="col-md-3">
                         <% if (request.suppliers && request.suppliers.length > 0) { %>
-                             <% _.each(request.suppliers,function(supplier){ %>
-                                <% if(supplier.quote) { %>
-                                    <% if(typeof supplier.quote.unviewed !== 'undefined' && supplier.quote.unviewed ) { %>
-                                            <a href="#request/<%= request.id %>/supplier/<%= supplier.id %>" class="newMsg">
-                                                    Quote From <%= supplier.name %>
-                                                <% if(supplier.quote.lineItems && supplier.quote.lineItems.length) { %>
-                                                <span class="quote">($<%=supplier.quote.lineItems[supplier.quote.lineItems.length - 1].price %>/<%=supplier.quote.lineItems[supplier.quote.lineItems.length - 1].unit %>)</span>
-                                                 <% }%>
-                                                </a>
-                                    <% } %>
-                                <% } %>
 
-                                <% if(supplier.messages.length) { %>
-                                    <% _.each(supplier.messages,function(message){ %>
-                                        <% if (typeof message.unviewed !== 'undefined' && message.unviewed ) { %>
-                                            <a href="#request/<%= request.id %>/supplier/<%= supplier.id %>" class="newMsg">
-                                                <span class="glyphicon glyphicon-envelope"></span> From <%= supplier.name %>
-                                            </a>
-                                        <% } %>
-                                    <% }) %>
-                                <% } %>
-                            <% }) %>
+                        	<% if (_.where(_.flatten(_.pluck(request.suppliers, "messages")),{readAt:null}).length > 0) { %>
+                        		<span class="label label-danger"><%= _.where(_.flatten(_.pluck(request.suppliers, "messages")),{readAt:null}).length %> new message<% if (_.where(_.flatten(_.pluck(request.suppliers, "messages")),{readAt:null}).length > 1) { %>s<% } %>
+                        		</span><br><br>
+                        	<% } %>
+
+                        	<% if (_.where(_.filter(_.flatten(_.pluck(request.suppliers, "quote")),function(quote) {return quote !== null}),{unviewed:true}).length > 0) { %>
+                        		<span class="label label-danger"><%= _.where(_.filter(_.flatten(_.pluck(request.suppliers, "quote")),function(quote) {return quote !== null}),{unviewed:true}).length %> new quote<% if (_.where(_.filter(_.flatten(_.pluck(request.suppliers, "quote")),function(quote) {return quote !== null}),{unviewed:true}).length > 1) { %>s<% } %>
+                        		</span>
+                        	<% } %>
 
                         <% } %>
                     </div>
@@ -88,7 +76,7 @@
 
 
 			<!-- request details -->
-			<h4> Request Details </h4>
+			<h3> Request Details </h3>
 			<div class="row"> 
 					<div class="col-md-3">Product Type:</div>
 					<div class="col-md-9"><%= category %></div>
@@ -103,33 +91,45 @@
 			<!-- supplier list -->
 			<% if (suppliers && suppliers.length > 0) { %>
 				<hr>
-				<h4> Suppliers </h4>
+				<h3> Suppliers </h3>
 				<div class="row hidden-sm hidden-xs">
 					<div class="col-md-4"><h5>Supplier</h5></div>
-					<div class="col-md-4"><h5>Location </h5></div>
-					<div class="col-md-2"><h5>Quote </h5></div>
+					<div class="col-md-3"><h5>Location </h5></div>
+					<div class="col-md-3"><h5>Quote </h5></div>
 					<div class="col-md-2"><h5>Messages </h5></div>
 				</div>
 				<hr>
 				<% _.each(suppliers,function(supplier){ %>
 					<div class="row"> 
 						<div class="col-md-4"><a href="#request/<%= id %>/supplier/<%= supplier.id %>"><%= supplier.name %></a></div>
-						<div class="col-md-4"><%= supplier.city %>, <%= supplier.state %></div>
-						<div class="col-md-2">
+						<div class="col-md-3"><%= supplier.city %>, <%= supplier.state %></div>
+						<div class="col-md-3">
 							<% if (supplier.quote && supplier.quote.lineItems.length > 0 ) { %>
 								<% _.each(supplier.quote.lineItems, function(lineItem){ %>
 									$<%= lineItem.price %>
 									<% if (lineItem.aggregateOrPerUnit == "per unit") { %>
-										per <%= lineItem.unit %><br>
+										per <%= lineItem.unit %>
 									<% } %>
+									<% if (supplier.quote.unviewed) { %> 
+										<span class="label label-danger">New</span>
+									<% } %>
+									<br>
 								<% }) %>
+
 							<% } else { %>
 								-
 							<% } %>
+
 						</div>
 						<div class="col-md-2">
                             <div class="hidden-sm hidden-xs">
                                 <%= supplier.messages.length %>
+                            	<%  if (supplier.messages !== null && supplier.messages.length > 0 && _.some(supplier.messages, function(message) { return message.readAt == null}) ) { %>
+                            		<span class="label label-danger">
+                            			<%= _.where(supplier.messages, {readAt: null}).length %>
+                            			New
+                            		</span>
+                            	<% } %>
                             </div>
                             <div class="visible-sm visible-xs">
                                 #messages: <%= supplier.messages.length %>
@@ -150,9 +150,9 @@
               <li class="active"><%= name %></li>
             </ol>
 
-			<h3> <%= name %>  </h3>
+			<h2> <%= name %>  </h2>
 			<hr>
-			<h4>Supplier Information</h4>
+			<h3>Supplier Information</h3>
 			<div class="row">
 				<div class="col-md-3">Location:</div><div class="col-md-9"><%= city %>, <%= state %></div>
 			</div>
@@ -171,9 +171,9 @@
 			</div>
 			<% if (quote !== null) { %>
 				<hr>
-				<h4>Quote
+				<h3>Quote
 					<% if (typeof quote.unviewed !== 'undefined' && quote.unviewed) { %><span class="label label-danger">NEW</span><% } %>
-				</h4>
+				</h3>
 				<div class="row h5 text-muted hidden-xs hidden-sm">
 					<div class="col-md-2">Qty</div><div class="col-md-8">Description</div><div class="col-md-2">Price</div>
 				</div>
@@ -226,13 +226,13 @@
 			<% } %>
 			<% if (messages !== null && messages.length > 0) { %>
 			<hr>
-			<h4>Messages </h4>
+			<h3>Messages </h3>
 			<div id="messages-view"></div>
 			<% } %>
 		</script>
 
 		<script type="text/template" id="message-template">
-			<div class="panel <% if (typeof unviewed !== 'undefined' && unviewed) { %>panel-success<% } else { %>panel-info<% } %> panel-message">
+			<div class="panel <% if (typeof readAt == 'undefined' || readAt == null) { %>panel-danger<% } else { %>panel-info<% } %> panel-message">
 			  	<div class="panel-heading">
 					<% if (buyer.id == senderId) { %>
 			  			You
